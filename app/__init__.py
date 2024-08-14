@@ -1,5 +1,6 @@
 from flask import Flask, json, jsonify
 from flask_jwt_extended import JWTManager
+from flask_swagger_ui import get_swaggerui_blueprint
 from app.utils.db import db, migrate
 
 from app.models import user_model, business_category_model, business_model
@@ -29,6 +30,16 @@ migrate.init_app(app, db)
 # # Setting JWT secret key directly
 app.config['JWT_SECRET_KEY'] = os.getenv('JWT_SECRET_KEY')
 jwt = JWTManager(app)
+
+# Swagger UI Configuration
+SWAGGER_URL = '/docs'
+API_URL = '/static/openapi.json'  # Ensure this URL is correct
+swagger_ui_blueprint = get_swaggerui_blueprint(
+    SWAGGER_URL,
+    API_URL,
+    config={'app_name': "YakusesBE-API"}
+)
+app.register_blueprint(swagger_ui_blueprint, url_prefix=SWAGGER_URL)
 
 # Registering blueprints
 app.register_blueprint(user_route.user_blueprint, url_prefix='/user')
