@@ -106,19 +106,19 @@ def update_profile():
             data = request.json
             required_fields = ['phone', 'address', 'about_me']
             for field in required_fields:
-                if field not in data:
+                if field in data:  # Perbaiki logika pengecekan
                     setattr(user, field, data[field])
 
             db.session.commit()
             response_data = user.as_dict()
 
-            return jsonify(response_data),200
+            return jsonify(response_data), 200
             
         else:
-            return jsonify({"message":"User not found"})
+            return jsonify({"message": "User not found"}), 404
 
     except Exception as e:
-        return jsonify({"message":str(e)}),500
+        return jsonify({"message": str(e)}), 500
     
 @user_blueprint.route("/register/admin", methods=["POST"])
 @jwt_required()
