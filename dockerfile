@@ -26,13 +26,13 @@
 # # Command to run the application
 # CMD ["poetry", "run", "flask", "run", "--host=0.0.0.0"]
 
-# Gunakan Python 3.11 sebagai base image
+# Use Python 3.11 as the base image
 FROM python:3.11-slim
 
 # Set working directory
 WORKDIR /app
 
-# Salin file requirements
+# Copy dependency files
 COPY pyproject.toml poetry.lock* /app/
 
 # Install Poetry
@@ -41,11 +41,12 @@ RUN pip install poetry
 # Install dependencies
 RUN poetry install --no-root --no-dev
 
-# Salin sisa kode aplikasi
+# Copy the rest of the application code
 COPY . /app/
 
-# Expose port
+# Expose the port Uvicorn will run on
 EXPOSE 5000
 
-# Command to run the app
-CMD ["poetry", "run", "gunicorn", "-w 4", "-b 0.0.0.0:5000", "app:app"]
+# Command to run the app using Uvicorn
+CMD ["poetry", "run", "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "5000"]
+
