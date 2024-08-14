@@ -1,2 +1,2 @@
-web: poetry run uvicorn app.main:app --reload
+web: poetry run gunicorn app:app
 
